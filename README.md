@@ -13,8 +13,9 @@ ant compile jar run
 ```
 `jinput.jar` ends up inside the `dist` folder.
 
-Javadocs are linked on the side of this repository (Or click [here](https://sigonasr2.github.io/jinput2.10/))
-Final built jar is found in [Releases](https://github.com/sigonasr2/jinput2.10/releases)
+- Javadocs are linked on the side of this repository (Or click [here](https://sigonasr2.github.io/jinput2.10/))
+- Final built jar is found in [Releases](https://github.com/sigonasr2/jinput2.10/releases)
+   - I will post new releases whenever they become useable and stable with new functionality. My main branches are effectively my development branch. I commit directly to main, so be wary. Use the Releases page for guaranteed stability.
 
 The other changes are:
 
