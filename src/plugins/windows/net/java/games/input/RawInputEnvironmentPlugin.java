@@ -121,6 +121,11 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		return controllers;
 	}
 
+	public Controller[] rescanControllers() {
+		RawInputEventQueue queue = new RawInputEventQueue();
+		return enumControllers(queue);
+	}
+
 	private final static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {
 		/* First, replace # with / in the device name, since that
 		 * seems to be the format in raw input device name

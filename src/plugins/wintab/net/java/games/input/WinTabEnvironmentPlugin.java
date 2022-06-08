@@ -120,12 +120,19 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 		return controllers;
 	}
 
+	public Controller[] rescanControllers() {
+		winTabContext.close();
+		winTabContext = new WinTabContext(window);
+		winTabContext.open();
+		return winTabContext.getControllers();
+	}
+
 	private final class ShutdownHook extends Thread {
 		public final void run() {
 			/* Release the devices to kill off active force feedback effects */
-			for (int i = 0; i < active_devices.size(); i++) {
+			/*for (int i = 0; i < active_devices.size(); i++) {
 				// TODO free the devices
-			}
+			}*/
 			//Close the context
 			winTabContext.close();
 			/* We won't release the window since it is

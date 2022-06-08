@@ -84,6 +84,11 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 		return controllers;
 	}
 
+    public final Controller[] rescanControllers() {
+		controllers=null;
+        return getControllers();
+    }
+
 	/**
 	 * @see net.java.games.input.ControllerEnvironment#isSupported()
 	 */

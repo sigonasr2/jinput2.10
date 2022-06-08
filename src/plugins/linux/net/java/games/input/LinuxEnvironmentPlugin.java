@@ -121,6 +121,10 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
         return controllers;
     }
 
+    public final Controller[] rescanControllers() {
+        return enumerateControllers();
+    }
+
     private final static Component[] createComponents(List<LinuxEventComponent> event_components, LinuxEventDevice device) {
         LinuxEventComponent[][] povs = new LinuxEventComponent[4][2];
         List<LinuxComponent> components = new ArrayList<>();
