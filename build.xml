@@ -150,10 +150,10 @@
            jarfile="${dist.dir}/jinput-with-sources.jar" manifest="${src.dir}/manifest.mf" >
          <fileset defaultexcludes="yes" dir="${build.classes.dir}">
             <include name="net/**/*.class"/>
-            <include name="src/**/*.java"/>
             <include name="net/**/*.properties"/>
             <exclude name="samples/**/*.*"/>
          </fileset>
+         <fileset dir="${src.dir}" includes="**/*.java"/>
       </jar>
    </target>
 </project>
