@@ -45,6 +45,10 @@ public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugi
         return controllers;
     }
 
+	public Controller[] rescanControllers() {
+		return new Controller[]{new AWTKeyboard(), new AWTMouse()};
+	}
+
 	public boolean isSupported() {
 		return true;
 	}

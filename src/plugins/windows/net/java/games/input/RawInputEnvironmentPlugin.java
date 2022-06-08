@@ -122,8 +122,13 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 	}
 
 	public Controller[] rescanControllers() {
-		RawInputEventQueue queue = new RawInputEventQueue();
-		return enumControllers(queue);
+		try {
+			RawInputEventQueue queue = new RawInputEventQueue();
+			return enumControllers(queue);
+		} catch (IOException e) {
+			log("Failed to enumerate devices: " + e.getMessage());
+			return new Controller[]{};
+		}
 	}
 
 	private final static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {

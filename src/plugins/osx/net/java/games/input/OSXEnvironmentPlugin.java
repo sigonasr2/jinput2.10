@@ -126,6 +126,10 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		return controllers;
 	}
 
+	public Controller[] rescanControllers() {
+		return enumerateControllers();
+	}
+
 	public boolean isSupported() {
 		return supported;
 	}

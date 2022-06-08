@@ -139,7 +139,12 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	}
 
 	public Controller[] rescanControllers() {
-		return enumControllers(window);
+		try {
+			return enumControllers(window);
+		} catch (IOException e) {
+			log("Failed to enumerate devices: " + e.getMessage());
+			return new Controller[]{};
+		}
 	}
 
 	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
