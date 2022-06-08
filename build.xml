@@ -146,5 +146,14 @@
             <exclude name="samples/**/*.*"/>
          </fileset>
       </jar>
+      <jar description="core APACHE jar binary file" compress="true"
+           jarfile="${dist.dir}/jinput-with-sources.jar" manifest="${src.dir}/manifest.mf" >
+         <fileset defaultexcludes="yes" dir="${build.classes.dir}">
+            <include name="net/**/*.class"/>
+            <include name="src/**/*.java"/>
+            <include name="net/**/*.properties"/>
+            <exclude name="samples/**/*.*"/>
+         </fileset>
+      </jar>
    </target>
 </project>
