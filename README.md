@@ -13,6 +13,8 @@ ant compile jar run
 ```
 `jinput.jar` ends up inside the `dist` folder.
 
+Javadocs are linked on the side of this repository (Or click [here](https://sigonasr2.github.io/jinput2.10/))
+
 The other changes are:
 
 # License
