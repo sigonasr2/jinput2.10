@@ -45,11 +45,6 @@ public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugi
         return controllers;
     }
 
-
-    /**
-     * Returns a list of all controllers available to this environment,
-     * or an empty array if there are no controllers in this environment.
-     */
 	public Controller[] rescanControllers() {
 		return new Controller[]{new AWTKeyboard(), new AWTMouse()};
 	}

@@ -47,8 +47,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     private static boolean supported = false;
 
     private final Controller[] controllers;
-    private final List<LinuxJoystickDevice> joystickDevices = new ArrayList<>();
-    private final List<LinuxEventDevice> eventDevices = new ArrayList<>();
+    private final List<LinuxDevice> devices = new ArrayList<LinuxDevice>();
     private final static LinuxDeviceThread device_thread = new LinuxDeviceThread();
 
     /**
@@ -123,9 +122,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     }
 
     public final Controller[] rescanControllers() {
-        Controller[] newControllers = enumerateControllers();
-        log("Linux plugin claims to have found " + newControllers.length + " controllers");
-        return newControllers;
+        return enumerateControllers();
     }
 
     private final static Component[] createComponents(List<LinuxEventComponent> event_components, LinuxEventDevice device) {
@@ -235,19 +232,15 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                 // compare
                 // Check if the nodes have the same name
                 if(evController.getName().equals(jsController.getName())) {
-                    System.out.println("Same names. "+jsController.getName());
                     // Check they have the same component count
                     Component[] evComponents = evController.getComponents();
                     Component[] jsComponents = jsController.getComponents();
                     if(evComponents.length == jsComponents.length) {
-                        System.out.println("Same component count."+evComponents.length);
                         boolean foundADifference = false;
                         // check the component pairs are of the same type
                         for(int k = 0; k < evComponents.length; k++) {
                             // Check the type of the component is the same
                             if(!(evComponents[k].getIdentifier() == jsComponents[k].getIdentifier())) {
-                                
-                                System.out.println("Differing components: "+evComponents[k].getIdentifier()+"//"+jsComponents[k].getIdentifier());
                                 foundADifference = true;
                             }
                         }
@@ -402,24 +395,13 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
             File event_file = joystick_device_files[i];
             try {
                 String path = getAbsolutePathPrivileged(event_file);
-                LinuxJoystickDevice device;
-                if (joystickDevices.size()>i) {
-                    device=joystickDevices.get(i);
-                    if (device==null) {
-                        device = new LinuxJoystickDevice(path);
-                        joystickDevices.set(i,device);
-                    }
-                } else {
-                    device = new LinuxJoystickDevice(path);
-                    joystickDevices.add(device);
-                }
+                LinuxJoystickDevice device = new LinuxJoystickDevice(path);
                 Controller controller = createJoystickFromJoystickDevice(device);
                 if(controller != null) {
                     controllers.add(controller);
-                } else {
+                    devices.add(device);
+                } else
                     device.close();
-                    joystickDevices.set(i,null);
-                }
             } catch(IOException e) {
                 log("Failed to open device (" + event_file + "): " + e.getMessage());
             }
@@ -462,26 +444,14 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
             File event_file = event_device_files[i];
             try {
                 String path = getAbsolutePathPrivileged(event_file);
-                LinuxEventDevice device;
-                //System.out.println(event_file+":"+i);
-                if (eventDevices.size()>i) {
-                    device=eventDevices.get(i);
-                    if (device==null) {
-                        device = new LinuxEventDevice(path);
-                        eventDevices.set(i,device);
-                    }
-                } else {
-                    device = new LinuxEventDevice(path);
-                    eventDevices.add(device);
-                }
+                LinuxEventDevice device = new LinuxEventDevice(path);
                 try {
                     Controller controller = createControllerFromDevice(device);
                     if(controller != null) {
                         controllers.add(controller);
-                    } else {
+                        devices.add(device);
+                    } else
                         device.close();
-                        eventDevices.set(i,null);
-                    }
                 } catch(IOException e) {
                     log("Failed to create Controller: " + e.getMessage());
                     device.close();
@@ -494,17 +464,9 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 
     private final class ShutdownHook extends Thread {
         public final void run() {
-            for(int i = 0; i < eventDevices.size(); i++) {
+            for(int i = 0; i < devices.size(); i++) {
                 try {
-                    LinuxEventDevice device = eventDevices.get(i);
-                    device.close();
-                } catch(IOException e) {
-                    log("Failed to close device: " + e.getMessage());
-                }
-            }
-            for(int i = 0; i < joystickDevices.size(); i++) {
-                try {
-                    LinuxJoystickDevice device = joystickDevices.get(i);
+                    LinuxDevice device = devices.get(i);
                     device.close();
                 } catch(IOException e) {
                     log("Failed to close device: " + e.getMessage());
