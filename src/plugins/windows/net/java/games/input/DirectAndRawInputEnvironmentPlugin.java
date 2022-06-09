@@ -86,6 +86,11 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 
     public final Controller[] rescanControllers() {
 		controllers=null;
+		//dinputPlugin.rescanControllers();
+		//rawPlugin.rescanControllers();	
+		dinputPlugin.releaseDevices();
+		dinputPlugin = new DirectInputEnvironmentPlugin();
+		rawPlugin = new RawInputEnvironmentPlugin();	
         return getControllers();
     }
 

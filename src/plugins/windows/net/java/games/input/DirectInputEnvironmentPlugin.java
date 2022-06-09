@@ -147,6 +147,16 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		}
 	}
 
+	/**
+	 * Releases all active devices running through this plugin. Call this before a hot reload.
+	 */
+	public void releaseDevices() {
+		for (int i = 0; i < active_devices.size(); i++) {
+			IDirectInputDevice device = active_devices.get(i);
+			device.release();
+		}
+	}
+
 	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
 		List<DIDeviceObject> device_objects = device.getObjects();
 		List<DIComponent> controller_components = new ArrayList<>();
