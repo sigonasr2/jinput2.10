@@ -122,6 +122,14 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     }
 
     public final Controller[] rescanControllers() {
+        for(int i = 0; i < devices.size(); i++) {
+            try {
+                LinuxDevice device = devices.get(i);
+                device.close();
+            } catch(IOException e) {
+                log("Failed to close device: " + e.getMessage());
+            }
+        }
         return enumerateControllers();
     }
 
