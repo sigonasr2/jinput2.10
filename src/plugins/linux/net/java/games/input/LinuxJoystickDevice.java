@@ -235,4 +235,13 @@ final class LinuxJoystickDevice implements LinuxDevice {
 	protected void finalize() throws IOException {
 		close();
 	}
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			return obj instanceof LinuxJoystickDevice&&((LinuxJoystickDevice)obj).getDeviceName().equals(getDeviceName());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

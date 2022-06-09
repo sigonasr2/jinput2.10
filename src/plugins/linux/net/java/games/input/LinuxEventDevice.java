@@ -364,4 +364,8 @@ final class LinuxEventDevice implements LinuxDevice {
 	protected void finalize() throws IOException {
 		close();
 	}
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof LinuxEventDevice&&((LinuxEventDevice)obj).getName().equals(getName());
+	}
 }
