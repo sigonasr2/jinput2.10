@@ -106,6 +106,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * List of all controllers in this environment
      */
     private ArrayList<Controller> controllers;
+    private ArrayList<Controller> newControllers;
     
 	private Collection loadedPlugins = new ArrayList();
     private ArrayList<ControllerEnvironment> environments = new ArrayList<ControllerEnvironment>();
@@ -124,6 +125,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         if (controllers == null) {
             // Controller list has not been scanned.
             controllers = new ArrayList<Controller>();
+			newControllers = new ArrayList<Controller>();
             AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     scanControllers();
@@ -198,48 +200,44 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     public Controller[] rescanControllers() {
 		if(!environments.isEmpty()){
 			Controller[] newScanControllers = environments.get(0).rescanControllers();
-			// need to add controllers that were connected
+			boolean[] controllerChecklist = new boolean[controllers.size()];
+			boolean[] newControllerChecklist = new boolean[newScanControllers.length];
+			// Create a checklist for all controllers.
 			for(int i = 0; i < newScanControllers.length; i++){
-			boolean controllerExist = false;
-			for(Controller controller:controllers){
-				if(newScanControllers[i] == controller){
-				controllerExist = true;
-				break;
+				for (int j=0;j<controllerChecklist.length;j++) {
+					if (!controllerChecklist[j]&&((AbstractController)controllers.get(j)).equals(newScanControllers[i])) {
+						controllerChecklist[j]=true;
+						newControllerChecklist[j]=true;
+						newControllers.add(newScanControllers[i]);
+						break;
+					}
 				}
 			}
-			if(!controllerExist){
-				controllers.add(newScanControllers[i]);
-				fireControllerAdded(newScanControllers[i]);
-			}
-			}
-			ArrayList<Controller> removeControllers = new ArrayList<Controller>();
-			// need to remove controllers that have disconnected
-			for(Controller controller:controllers){
-			boolean controllerExist = false;
-			for(int i = 0; i < newScanControllers.length; i++){
-				if(controller == newScanControllers[i]){
-				controllerExist = true;
-				break;
+			for (int i=0;i<controllerChecklist.length;i++) {
+				if (!controllerChecklist[i]) {
+					//Remove this controller.
+					fireControllerRemoved(controllers.get(i));
 				}
 			}
-			if(!controllerExist){
-				//controllers.remove(controller);
-				removeControllers.add(controller);
-				fireControllerRemoved(controller);
-			}
-			}
-			for(Controller controller: removeControllers){
-				controllers.remove(controller);
+			for (int i=0;i<newControllerChecklist.length;i++) {
+				if (!newControllerChecklist[i]) {
+					//Add this controller.
+					fireControllerAdded(newScanControllers[i]);
+					newControllers.add(newScanControllers[i]);
+				}
 			}
 		}
 
-        Controller[] ret = new Controller[controllers.size()];
-        Iterator<Controller> it = controllers.iterator();
+        Controller[] ret = new Controller[newControllers.size()];
+        Iterator<Controller> it = newControllers.iterator();
         int i = 0;
         while (it.hasNext()) {
             ret[i] = (Controller)it.next();
             i++;
         }
+		controllers.clear();
+		controllers.addAll(newControllers);
+		newControllers.clear();
         return ret;
     }
     

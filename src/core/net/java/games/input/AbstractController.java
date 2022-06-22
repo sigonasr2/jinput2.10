@@ -46,6 +46,32 @@ public abstract class AbstractController implements Controller {
 	
 	private final static Event event = new Event();
 	
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractController) {
+            AbstractController c = (AbstractController)obj;
+            return name.equals(c.getName())&&
+            components.length==c.getComponents().length&&
+            children.length==c.getControllers().length&&
+            rumblers.length==c.getRumblers().length&&
+            componentsMatch(this,c);
+        } else {
+            return false;
+        }
+    }
+
+    private boolean componentsMatch(AbstractController a, AbstractController c) {
+        if (a.id_to_components.size()==c.id_to_components.size()) {
+            for (Component.Identifier id : a.id_to_components.keySet()) {
+                if (!c.id_to_components.containsKey(id)&&id.getName().equals(c.id_to_components.get(id).getName())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Human-readable name for this Controller
      */

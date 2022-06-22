@@ -46,7 +46,7 @@ package net.java.games.input;
  * controllers.
  */
 public interface Controller {
-    
+
     /**
      * Returns the controllers connected to make up this controller, or
      * an empty array if this controller contains no child controllers.
