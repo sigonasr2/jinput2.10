@@ -43,19 +43,19 @@ package net.java.games.input;
  */
 public class ControllerEvent {
 
-    private Controller controller;
+    private AbstractController controller;
 
     /**
      * Creates a controller event object.
      */
-    public ControllerEvent(Controller c) {
+    public ControllerEvent(AbstractController c) {
         controller = c;
     }
 
     /**
      * Returns the controller for this event.
      */
-    public Controller getController() {
+    public AbstractController getController() {
         return controller;
     }
 } // class ControllerEvent

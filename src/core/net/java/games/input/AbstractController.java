@@ -46,6 +46,16 @@ public abstract class AbstractController implements Controller {
 	
 	private final static Event event = new Event();
 	
+    /**
+     * Overwritten to specifically calculate if this controller matches another controller.
+     * A controller matches if it is the same type of controller as specified,
+     * regardless of which order it was plugged into a device. Therefore this
+     * cannot be used simply to check if all controllers plugged in match all ports
+     * as two controllers of the same type i.e. Two XBox One controllers would
+     * both be considered equal.
+     * 
+     * Keep this in mind when doing equality comparisons with other controllers.
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AbstractController) {

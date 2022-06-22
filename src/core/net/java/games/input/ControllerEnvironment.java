@@ -129,7 +129,7 @@ public abstract class ControllerEnvironment {
      * Creates and sends an event to the controller listeners that a controller
      * has been added.
      */
-    protected void fireControllerAdded(Controller c) {
+    protected void fireControllerAdded(AbstractController c) {
         ControllerEvent ev = new ControllerEvent(c);
         Iterator it = controllerListeners.iterator();
         while (it.hasNext()) {
@@ -141,7 +141,7 @@ public abstract class ControllerEnvironment {
      * Creates and sends an event to the controller listeners that a controller
      * has been lost.
      */
-    protected void fireControllerRemoved(Controller c) {
+    protected void fireControllerRemoved(AbstractController c) {
         ControllerEvent ev = new ControllerEvent(c);
         Iterator it = controllerListeners.iterator();
         while (it.hasNext()) {
