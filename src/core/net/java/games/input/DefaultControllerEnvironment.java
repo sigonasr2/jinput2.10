@@ -209,6 +209,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			}
 			if(!controllerExist){
 				controllers.add(newScanControllers[i]);
+				fireControllerAdded(newScanControllers[i]);
 			}
 			}
 			ArrayList<Controller> removeControllers = new ArrayList<Controller>();
@@ -224,6 +225,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			if(!controllerExist){
 				//controllers.remove(controller);
 				removeControllers.add(controller);
+				fireControllerRemoved(controller);
 			}
 			}
 			for(Controller controller: removeControllers){
