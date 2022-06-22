@@ -107,6 +107,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      */
     private ArrayList<Controller> controllers;
     private ArrayList<Controller> newControllers;
+    private ArrayList<Boolean> controllerChecklist;
+    private ArrayList<Boolean> newControllerChecklist;
     
 	private Collection loadedPlugins = new ArrayList();
     private ArrayList<ControllerEnvironment> environments = new ArrayList<ControllerEnvironment>();
@@ -115,6 +117,9 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * Public no-arg constructor.
      */
     public DefaultControllerEnvironment() {
+		newControllers = new ArrayList<Controller>();
+		controllerChecklist = new ArrayList<Boolean>();
+		newControllerChecklist = new ArrayList<Boolean>();
     }
     
     /**
@@ -125,7 +130,6 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         if (controllers == null) {
             // Controller list has not been scanned.
             controllers = new ArrayList<Controller>();
-			newControllers = new ArrayList<Controller>();
             AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     scanControllers();
@@ -200,27 +204,25 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     public Controller[] rescanControllers() {
 		if(!environments.isEmpty()){
 			Controller[] newScanControllers = environments.get(0).rescanControllers();
-			boolean[] controllerChecklist = new boolean[controllers.size()];
-			boolean[] newControllerChecklist = new boolean[newScanControllers.length];
 			// Create a checklist for all controllers.
 			for(int i = 0; i < newScanControllers.length; i++){
-				for (int j=0;j<controllerChecklist.length;j++) {
-					if (!controllerChecklist[j]&&((AbstractController)controllers.get(j)).equals(newScanControllers[i])) {
-						controllerChecklist[j]=true;
-						newControllerChecklist[j]=true;
+				for (int j=0;j<controllerChecklist.size();j++) {
+					if (!controllerChecklist.get(j)&&((AbstractController)controllers.get(j)).equals(newScanControllers[i])) {
+						controllerChecklist.set(j,true);
+						newControllerChecklist.set(j,true);
 						newControllers.add(newScanControllers[i]);
 						break;
 					}
 				}
 			}
-			for (int i=0;i<controllerChecklist.length;i++) {
-				if (!controllerChecklist[i]) {
+			for (int i=0;i<controllerChecklist.size();i++) {
+				if (!controllerChecklist.get(i)) {
 					//Remove this controller.
 					fireControllerRemoved(controllers.get(i));
 				}
 			}
-			for (int i=0;i<newControllerChecklist.length;i++) {
-				if (!newControllerChecklist[i]) {
+			for (int i=0;i<newControllerChecklist.size();i++) {
+				if (!newControllerChecklist.get(i)) {
 					//Add this controller.
 					fireControllerAdded(newScanControllers[i]);
 					newControllers.add(newScanControllers[i]);
@@ -238,6 +240,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 		controllers.clear();
 		controllers.addAll(newControllers);
 		newControllers.clear();
+		controllerChecklist.clear();
+		newControllerChecklist.clear();
         return ret;
     }
     
