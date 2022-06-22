@@ -49,7 +49,7 @@ public abstract class Keyboard extends AbstractController {
      * Subclasses should initialize the array of axes to an array of keys.
      * @param name The name of the keyboard
      */
-    protected Keyboard(String name, Component[] keys, Controller[] children, Rumbler[] rumblers) {
+    protected Keyboard(String name, Component[] keys, AbstractController[] children, Rumbler[] rumblers) {
         super(name, keys, children, rumblers);
     }
     

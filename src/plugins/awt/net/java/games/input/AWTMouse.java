@@ -52,7 +52,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 	private int event_state = EVENT_X;
 
     protected AWTMouse() {
-        super("AWTMouse", createComponents(), new Controller[]{}, new Rumbler[]{});
+        super("AWTMouse", createComponents(), new AbstractController[]{}, new Rumbler[]{});
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     }
 

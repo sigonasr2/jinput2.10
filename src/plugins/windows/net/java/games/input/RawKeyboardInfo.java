@@ -75,7 +75,7 @@ class RawKeyboardInfo extends RawDeviceInfo {
 		return device.getHandle();
 	}
 
-	public final Controller createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException {
-		return new RawKeyboard(setupapi_device.getName(), device, new Controller[]{}, new Rumbler[]{});
+	public final AbstractController createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException {
+		return new RawKeyboard(setupapi_device.getName(), device, new AbstractController[]{}, new Rumbler[]{});
 	}
 }

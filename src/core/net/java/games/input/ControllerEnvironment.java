@@ -95,12 +95,12 @@ public abstract class ControllerEnvironment {
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
-    public abstract Controller[] getControllers();
+    public abstract AbstractController[] getControllers();
     /**
      * Rescans the devices and provides a list of new controllers.
      * @return a list of all controllers available to this environment.
      */
-    public abstract Controller[] rescanControllers();
+    public abstract AbstractController[] rescanControllers();
     
     /**
      * Adds a listener for controller state change events.

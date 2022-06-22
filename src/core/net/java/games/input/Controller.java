@@ -53,7 +53,7 @@ public interface Controller {
      * The objects in the array are returned in order of assignment priority
      * (primary stick, secondary buttons, etc.).
      */
-    public abstract Controller[] getControllers();
+    public abstract AbstractController[] getControllers();
 
     /**
      * Returns the type of the Controller.

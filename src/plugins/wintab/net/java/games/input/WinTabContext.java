@@ -38,7 +38,7 @@ public class WinTabContext {
 		this.window = window;
 	}
 	
-	public Controller[] getControllers() {
+	public AbstractController[] getControllers() {
 		if(hCTX==0) {
 			throw new IllegalStateException("Context must be open before getting the controllers");
 		}

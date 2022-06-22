@@ -45,7 +45,7 @@ import java.io.IOException;
  * @version 1.0
  */
 abstract class RawDeviceInfo {
-	public abstract Controller createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException;
+	public abstract AbstractController createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException;
 
 	public abstract int getUsage();
 

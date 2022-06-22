@@ -85,7 +85,7 @@ public abstract class AbstractController implements Controller {
     /**
      * Array of child controllers
      */
-    private final Controller[] children;
+    private final AbstractController[] children;
     
     /**
      * Array of rumblers
@@ -107,7 +107,7 @@ public abstract class AbstractController implements Controller {
      * @param children child controllers for the controller
      * @param rumblers rumblers for the controller
      */
-    protected AbstractController(String name, Component[] components, Controller[] children, Rumbler[] rumblers) {
+    protected AbstractController(String name, Component[] components, AbstractController[] children, Rumbler[] rumblers) {
         this.name = name;
         this.components = components;
         this.children = children;
@@ -124,7 +124,7 @@ public abstract class AbstractController implements Controller {
      * The objects in the array are returned in order of assignment priority
      * (primary stick, secondary buttons, etc.).
      */
-    public final Controller[] getControllers() {
+    public final AbstractController[] getControllers() {
         return children;
     }
 

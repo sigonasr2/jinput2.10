@@ -74,7 +74,7 @@ final class RawMouse extends Mouse {
 	private final RawMouseEvent current_event = new RawMouseEvent();
 	private int event_state = EVENT_DONE;
 	
-	protected RawMouse(String name, RawDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) throws IOException {
+	protected RawMouse(String name, RawDevice device, Component[] components, AbstractController[] children, Rumbler[] rumblers) throws IOException {
 		super(name, components, children, rumblers);
 		this.device = device;
 	}

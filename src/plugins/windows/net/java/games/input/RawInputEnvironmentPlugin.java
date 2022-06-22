@@ -100,12 +100,12 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		}
 	}
 
-    private final Controller[] controllers;
+    private final AbstractController[] controllers;
 
 	/** Creates new DirectInputEnvironment */
 	public RawInputEnvironmentPlugin() {
 		RawInputEventQueue queue;
-		Controller[] controllers = new Controller[]{};
+		AbstractController[] controllers = new AbstractController[]{};
 		if(isSupported()) {
 			try {
 				queue = new RawInputEventQueue();
@@ -117,17 +117,17 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		this.controllers = controllers;
 	}
 
-	public final Controller[] getControllers() {
+	public final AbstractController[] getControllers() {
 		return controllers;
 	}
 
-	public Controller[] rescanControllers() {
+	public AbstractController[] rescanControllers() {
 		try {
 			RawInputEventQueue queue = new RawInputEventQueue();
 			return enumControllers(queue);
 		} catch (IOException e) {
 			log("Failed to enumerate devices: " + e.getMessage());
-			return new Controller[]{};
+			return new AbstractController[]{};
 		}
 	}
 
@@ -144,7 +144,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		return null;
 	}
 	
-	private final static void createControllersFromDevices(RawInputEventQueue queue, List<Controller> controllers, List<RawDevice> devices, List<SetupAPIDevice> setupapi_devices) throws IOException {
+	private final static void createControllersFromDevices(RawInputEventQueue queue, List<AbstractController> controllers, List<RawDevice> devices, List<SetupAPIDevice> setupapi_devices) throws IOException {
 		List<RawDevice> active_devices = new ArrayList<>();
 		for (int i = 0; i < devices.size(); i++) {
 			RawDevice device = devices.get(i);
@@ -156,7 +156,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 				continue;
 			}
 			RawDeviceInfo info = device.getInfo();
-			Controller controller = info.createControllerFromDevice(device, setupapi_device);
+			AbstractController controller = info.createControllerFromDevice(device, setupapi_device);
 			if (controller != null) {
 				controllers.add(controller);
 				active_devices.add(device);
@@ -167,13 +167,13 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 
 	private final static native void enumerateDevices(RawInputEventQueue queue, List<RawDevice> devices) throws IOException;
 
-	private final Controller[] enumControllers(RawInputEventQueue queue) throws IOException {
-		List<Controller> controllers = new ArrayList<>();
+	private final AbstractController[] enumControllers(RawInputEventQueue queue) throws IOException {
+		List<AbstractController> controllers = new ArrayList<>();
 		List<RawDevice> devices = new ArrayList<>();
 		enumerateDevices(queue, devices);
 		List<SetupAPIDevice> setupapi_devices = enumSetupAPIDevices();
 		createControllersFromDevices(queue, controllers, devices, setupapi_devices);
-		Controller[] controllers_array = new Controller[controllers.size()];
+		AbstractController[] controllers_array = new AbstractController[controllers.size()];
 		controllers.toArray(controllers_array);
 		return controllers_array;
 	}

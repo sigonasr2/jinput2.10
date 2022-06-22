@@ -47,7 +47,7 @@ final class RawKeyboard extends Keyboard {
 	private final RawKeyboardEvent raw_event = new RawKeyboardEvent();
 	private final RawDevice device;
 	
-	protected RawKeyboard(String name, RawDevice device, Controller[] children, Rumbler[] rumblers) throws IOException {
+	protected RawKeyboard(String name, RawDevice device, AbstractController[] children, Rumbler[] rumblers) throws IOException {
 		super(name, createKeyboardComponents(device), children, rumblers);
 		this.device = device;
 	}

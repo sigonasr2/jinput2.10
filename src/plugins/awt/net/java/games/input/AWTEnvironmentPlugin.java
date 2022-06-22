@@ -35,18 +35,18 @@ import net.java.games.util.plugins.Plugin;
  */
 public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	
-	private final Controller[] controllers;
+	private final AbstractController[] controllers;
 
 	public AWTEnvironmentPlugin() {
-		this.controllers = new Controller[]{new AWTKeyboard(), new AWTMouse()};
+		this.controllers = new AbstractController[]{new AWTKeyboard(), new AWTMouse()};
 	}
 
-    public Controller[] getControllers() {
+    public AbstractController[] getControllers() {
         return controllers;
     }
 
-	public Controller[] rescanControllers() {
-		return new Controller[]{new AWTKeyboard(), new AWTMouse()};
+	public AbstractController[] rescanControllers() {
+		return new AbstractController[]{new AWTKeyboard(), new AWTMouse()};
 	}
 
 	public boolean isSupported() {

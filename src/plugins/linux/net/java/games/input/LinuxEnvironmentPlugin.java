@@ -46,9 +46,12 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     private final static String POSTFIX64BIT = "64";
     private static boolean supported = false;
 
-    private final Controller[] controllers;
+    private final AbstractController[] controllers;
     private final List<LinuxDevice> devices = new ArrayList<LinuxDevice>();
     private final static LinuxDeviceThread device_thread = new LinuxDeviceThread();
+    final List<AbstractController> CONTROLLERS = new ArrayList<>();
+    final List<AbstractController> eventControllers = new ArrayList<>();
+    final List<AbstractController> jsControllers = new ArrayList<>();
 
     /**
      * Static utility method for loading native libraries.
@@ -108,7 +111,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                             return null;
                     });
         } else {
-            controllers = new Controller[0];
+            controllers = new AbstractController[0];
         }
     }
 
@@ -117,11 +120,11 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
      * @return Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
-    public final Controller[] getControllers() {
+    public final AbstractController[] getControllers() {
         return controllers;
     }
 
-    public final Controller[] rescanControllers() {
+    public final AbstractController[] rescanControllers() {
         for(int i = 0; i < devices.size(); i++) {
             try {
                 LinuxDevice device = devices.get(i);
@@ -134,6 +137,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     }
 
     private final static Component[] createComponents(List<LinuxEventComponent> event_components, LinuxEventDevice device) {
+        
         LinuxEventComponent[][] povs = new LinuxEventComponent[4][2];
         List<LinuxComponent> components = new ArrayList<>();
         for(int i = 0; i < event_components.size(); i++) {
@@ -193,7 +197,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     }
 
     private final static Mouse createMouseFromDevice(LinuxEventDevice device, Component[] components) throws IOException {
-        Mouse mouse = new LinuxMouse(device, components, new Controller[]{}, device.getRumblers());
+        Mouse mouse = new LinuxMouse(device, components, new AbstractController[]{}, device.getRumblers());
         if(mouse.getX() != null && mouse.getY() != null && mouse.getPrimaryButton() != null)
             return mouse;
         else
@@ -201,16 +205,16 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     }
 
     private final static Keyboard createKeyboardFromDevice(LinuxEventDevice device, Component[] components) throws IOException {
-        Keyboard keyboard = new LinuxKeyboard(device, components, new Controller[]{}, device.getRumblers());
+        Keyboard keyboard = new LinuxKeyboard(device, components, new AbstractController[]{}, device.getRumblers());
         return keyboard;
     }
 
-    private final static Controller createJoystickFromDevice(LinuxEventDevice device, Component[] components, Controller.Type type) throws IOException {
-        Controller joystick = new LinuxAbstractController(device, components, new Controller[]{}, device.getRumblers(), type);
+    private final static AbstractController createJoystickFromDevice(LinuxEventDevice device, Component[] components, Controller.Type type) throws IOException {
+        AbstractController joystick = new LinuxAbstractController(device, components, new AbstractController[]{}, device.getRumblers(), type);
         return joystick;
     }
 
-    private final static Controller createControllerFromDevice(LinuxEventDevice device) throws IOException {
+    private final static AbstractController createControllerFromDevice(LinuxEventDevice device) throws IOException {
         List<LinuxEventComponent> event_components = device.getComponents();
         Component[] components = createComponents(event_components, device);
         Controller.Type type = device.getType();
@@ -225,17 +229,17 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
             return null;
     }
 
-    private final Controller[] enumerateControllers() {
-        List<Controller> controllers = new ArrayList<>();
-        List<Controller> eventControllers = new ArrayList<>();
-        List<Controller> jsControllers = new ArrayList<>();
+    private final AbstractController[] enumerateControllers() {
+        CONTROLLERS.clear();
+        eventControllers.clear();
+        jsControllers.clear();
         enumerateEventControllers(eventControllers);
         enumerateJoystickControllers(jsControllers);
 
         for(int i = 0; i < eventControllers.size(); i++) {
             for(int j = 0; j < jsControllers.size(); j++) {
-                Controller evController = eventControllers.get(i);
-                Controller jsController = jsControllers.get(j);
+                AbstractController evController = eventControllers.get(i);
+                AbstractController jsController = jsControllers.get(j);
 
                 // compare
                 // Check if the nodes have the same name
@@ -254,7 +258,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                         }
 
                         if(!foundADifference) {
-                            controllers.add(new LinuxCombinedController((LinuxAbstractController) eventControllers.remove(i), (LinuxJoystickAbstractController) jsControllers.remove(j)));
+                            CONTROLLERS.add(new LinuxCombinedController((LinuxAbstractController) eventControllers.remove(i), (LinuxJoystickAbstractController) jsControllers.remove(j)));
                             i--;
                             j--;
                             break;
@@ -263,11 +267,11 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                 }
             }
         }
-        controllers.addAll(eventControllers);
-        controllers.addAll(jsControllers);
+        CONTROLLERS.addAll(eventControllers);
+        CONTROLLERS.addAll(jsControllers);
 
-        Controller[] controllers_array = new Controller[controllers.size()];
-        controllers.toArray(controllers_array);
+        AbstractController[] controllers_array = new AbstractController[CONTROLLERS.size()];
+        CONTROLLERS.toArray(controllers_array);
         return controllers_array;
     }
 
@@ -342,7 +346,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
         }
     }
 
-    private final static Controller createJoystickFromJoystickDevice(LinuxJoystickDevice device) {
+    private final static AbstractController createJoystickFromJoystickDevice(LinuxJoystickDevice device) {
         List<AbstractComponent> components = new ArrayList<>();
         byte[] axisMap = device.getAxisMap();
         char[] buttonMap = device.getButtonMap();
@@ -389,10 +393,10 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
             }
         }
 
-        return new LinuxJoystickAbstractController(device, components.toArray(new Component[]{}), new Controller[]{}, new Rumbler[]{});
+        return new LinuxJoystickAbstractController(device, components.toArray(new Component[]{}), new AbstractController[]{}, new Rumbler[]{});
     }
 
-    private final void enumerateJoystickControllers(List<Controller> controllers) {
+    private final void enumerateJoystickControllers(List<AbstractController> controllers) {
         File[] joystick_device_files = enumerateJoystickDeviceFiles("/dev/input");
         if(joystick_device_files == null || joystick_device_files.length == 0) {
             joystick_device_files = enumerateJoystickDeviceFiles("/dev");
@@ -404,7 +408,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
             try {
                 String path = getAbsolutePathPrivileged(event_file);
                 LinuxJoystickDevice device = new LinuxJoystickDevice(path);
-                Controller controller = createJoystickFromJoystickDevice(device);
+                AbstractController controller = createJoystickFromJoystickDevice(device);
                 if(controller != null) {
                     controllers.add(controller);
                     devices.add(device);
@@ -442,7 +446,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
         });
     }
 
-    private final void enumerateEventControllers(List<Controller> controllers) {
+    private final void enumerateEventControllers(List<AbstractController> controllers) {
         final File dev = new File("/dev/input");
         File[] event_device_files = listFilesPrivileged(dev, (File dir, String name) -> name.startsWith("event"));
 
@@ -454,7 +458,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                 String path = getAbsolutePathPrivileged(event_file);
                 LinuxEventDevice device = new LinuxEventDevice(path);
                 try {
-                    Controller controller = createControllerFromDevice(device);
+                    AbstractController controller = createControllerFromDevice(device);
                     if(controller != null) {
                         controllers.add(controller);
                         devices.add(device);

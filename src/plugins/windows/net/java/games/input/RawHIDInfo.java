@@ -74,7 +74,7 @@ class RawHIDInfo extends RawDeviceInfo {
 		return device.getHandle();
 	}
 
-	public final Controller createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException {
+	public final AbstractController createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException {
 		return null;
 	}
 }

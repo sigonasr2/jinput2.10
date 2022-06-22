@@ -38,7 +38,7 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 
 	private RawInputEnvironmentPlugin rawPlugin;
 	private DirectInputEnvironmentPlugin dinputPlugin;
-	private Controller[] controllers = null;
+	private AbstractController[] controllers = null;
 	
 	public DirectAndRawInputEnvironmentPlugin() {
 		// These two *must* be loaded in this order for raw devices to work.
@@ -49,13 +49,13 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 	/**
 	 * @see net.java.games.input.ControllerEnvironment#getControllers()
 	 */
-	public Controller[] getControllers() {
+	public AbstractController[] getControllers() {
 		if(controllers == null) {
 			boolean rawKeyboardFound = false;
 			boolean rawMouseFound = false;
-			List<Controller> tempControllers = new ArrayList<>();
-			Controller[] dinputControllers = dinputPlugin.getControllers();
-			Controller[] rawControllers = rawPlugin.getControllers();
+			List<AbstractController> tempControllers = new ArrayList<>();
+			AbstractController[] dinputControllers = dinputPlugin.getControllers();
+			AbstractController[] rawControllers = rawPlugin.getControllers();
 			for(int i=0;i<rawControllers.length;i++) {
 				tempControllers.add(rawControllers[i]);
 				if(rawControllers[i].getType()==Controller.Type.KEYBOARD) {
@@ -78,13 +78,13 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 				}
 			}
 			
-			controllers = tempControllers.toArray(new Controller[]{});
+			controllers = tempControllers.toArray(new AbstractController[]{});
 		}
 		
 		return controllers;
 	}
 
-    public final Controller[] rescanControllers() {
+    public final AbstractController[] rescanControllers() {
 		controllers=null;
 		//dinputPlugin.rescanControllers();
 		//rawPlugin.rescanControllers();	

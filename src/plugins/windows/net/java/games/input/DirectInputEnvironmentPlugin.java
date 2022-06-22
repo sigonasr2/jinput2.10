@@ -100,14 +100,14 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		}
 	}
 
-	private final Controller[] controllers;
+	private final AbstractController[] controllers;
 	private final List<IDirectInputDevice> active_devices = new ArrayList<>();
 	private final DummyWindow window;
 
 	/** Creates new DirectInputEnvironment */
 	public DirectInputEnvironmentPlugin() {		
 		DummyWindow window = null;
-		Controller[] controllers = new Controller[]{};
+		AbstractController[] controllers = new AbstractController[]{};
 		if(isSupported()) {
 			try {
 				window = new DummyWindow();
@@ -134,16 +134,16 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		}
 	}
 
-	public final Controller[] getControllers() {
+	public final AbstractController[] getControllers() {
 		return controllers;
 	}
 
-	public Controller[] rescanControllers() {
+	public AbstractController[] rescanControllers() {
 		try {
 			return enumControllers(window);
 		} catch (IOException e) {
 			log("Failed to enumerate devices: " + e.getMessage());
-			return new Controller[]{};
+			return new AbstractController[]{};
 		}
 	}
 
@@ -179,7 +179,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		
 	private final Mouse createMouseFromDevice(IDirectInputDevice device) {
 		Component[] components = createComponents(device, true);
-		Mouse mouse = new DIMouse(device, components, new Controller[]{}, device.getRumblers());
+		Mouse mouse = new DIMouse(device, components, new AbstractController[]{}, device.getRumblers());
 		if (mouse.getX() != null && mouse.getY() != null && mouse.getPrimaryButton() != null)
 			return mouse;
 		else
@@ -188,16 +188,16 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 
 	private final AbstractController createControllerFromDevice(IDirectInputDevice device, Controller.Type type) {
 		Component[] components = createComponents(device, false);
-		AbstractController controller = new DIAbstractController(device, components, new Controller[]{}, device.getRumblers(), type);
+		AbstractController controller = new DIAbstractController(device, components, new AbstractController[]{}, device.getRumblers(), type);
 		return controller;
 	}
 
 	private final Keyboard createKeyboardFromDevice(IDirectInputDevice device) {
 		Component[] components = createComponents(device, false);
-		return new DIKeyboard(device, components, new Controller[]{}, device.getRumblers());
+		return new DIKeyboard(device, components, new AbstractController[]{}, device.getRumblers());
 	}
 
-	private final Controller createControllerFromDevice(IDirectInputDevice device) {
+	private final AbstractController createControllerFromDevice(IDirectInputDevice device) {
 		switch (device.getType()) {
 			case IDirectInputDevice.DI8DEVTYPE_MOUSE:
 				return createMouseFromDevice(device);
@@ -218,14 +218,14 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		}
 	}
 	
-	private final Controller[] enumControllers(DummyWindow window) throws IOException {
-		List<Controller> controllers = new ArrayList<>();
+	private final AbstractController[] enumControllers(DummyWindow window) throws IOException {
+		List<AbstractController> controllers = new ArrayList<>();
 		IDirectInput dinput = new IDirectInput(window);
 		try {
 			List<IDirectInputDevice> devices = dinput.getDevices();
 			for (int i = 0; i < devices.size(); i++) {
 				IDirectInputDevice device = devices.get(i);
-				Controller controller = createControllerFromDevice(device);
+				AbstractController controller = createControllerFromDevice(device);
 				if (controller != null) {
 					controllers.add(controller);
 					active_devices.add(device);
@@ -235,7 +235,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		} finally {
 			dinput.release();
 		}
-		Controller[] controllers_array = new Controller[controllers.size()];
+		AbstractController[] controllers_array = new AbstractController[controllers.size()];
 		controllers.toArray(controllers_array);
 		return controllers_array;
 	}

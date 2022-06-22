@@ -47,7 +47,7 @@ import java.io.IOException;
 final class DIMouse extends Mouse {
 	private final IDirectInputDevice device;
 	
-	protected DIMouse(IDirectInputDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) {
+	protected DIMouse(IDirectInputDevice device, Component[] components, AbstractController[] children, Rumbler[] rumblers) {
 		super(device.getProductName(), components, children, rumblers);
 		this.device = device;
 	}

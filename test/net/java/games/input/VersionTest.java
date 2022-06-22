@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @since 2.10
+ * @since 2.11
  */
 public class VersionTest {
 
@@ -76,7 +76,7 @@ public class VersionTest {
    public void testGetVersion() {
       System.out.println("VersionTest : testGetVersion");
       String result = Version.getVersion();
-      assertEquals("2.10", result);
+      assertEquals("2.11", result);
    }
 
 }

@@ -65,7 +65,7 @@ import java.util.PropertyResourceBundle;
  * <li>4.7.1-M2</li>
  * </ul>
  *
- * @version 2.10
+ * @version 2.11
  */
 public final class Version {
 

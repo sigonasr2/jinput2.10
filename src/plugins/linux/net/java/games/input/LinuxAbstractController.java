@@ -49,7 +49,7 @@ final class LinuxAbstractController extends AbstractController {
 	private final LinuxEventDevice device;
 	private final Type type;
 	
-	protected LinuxAbstractController(LinuxEventDevice device, Component[] components, Controller[] children, Rumbler[] rumblers, Type type) throws IOException {
+	protected LinuxAbstractController(LinuxEventDevice device, Component[] components, AbstractController[] children, Rumbler[] rumblers, Type type) throws IOException {
 		super(device.getName(), components, children, rumblers);
 		this.device = device;
 		this.port = device.getPortType();

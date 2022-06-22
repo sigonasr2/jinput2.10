@@ -21,7 +21,7 @@
       <property name="j2seapi" value="http://docs.oracle.com/javase/8/docs/api/"/>        
       <!-- To set with your location of Java 8 JDK -->
       <property name="javadocDir" value="${jdk.home}/docs/api"/>
-      <property name="javadocEXE" value="/usr/bin/javadoc"/>        
+      <property name="javadocEXE" value="/opt/java/17.0.2/bin/javadoc"/>        
    </target>
 
    <!-- =================================================================== -->

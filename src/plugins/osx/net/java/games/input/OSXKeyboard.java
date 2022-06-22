@@ -48,7 +48,7 @@ final class OSXKeyboard extends Keyboard {
 	private final PortType port;
 	private final OSXHIDQueue queue;
 	
-	protected OSXKeyboard(OSXHIDDevice device, OSXHIDQueue queue, Component[] components, Controller[] children, Rumbler[] rumblers) {
+	protected OSXKeyboard(OSXHIDDevice device, OSXHIDQueue queue, Component[] components, AbstractController[] children, Rumbler[] rumblers) {
 		super(device.getProductName(), components, children, rumblers);
 		this.queue = queue;
 		this.port = device.getPortType();

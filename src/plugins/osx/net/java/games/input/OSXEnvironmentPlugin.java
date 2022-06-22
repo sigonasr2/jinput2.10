@@ -112,21 +112,21 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		return major > major_required || (major == major_required && minor >= minor_required);
 	}
 
-	private final Controller[] controllers;
+	private final AbstractController[] controllers;
 
 	public OSXEnvironmentPlugin() {
 		if(isSupported()) {
 			this.controllers = enumerateControllers();
 		} else {
-			this.controllers = new Controller[0];
+			this.controllers = new AbstractController[0];
 		}
 	}
 
-	public final Controller[] getControllers() {
+	public final AbstractController[] getControllers() {
 		return controllers;
 	}
 
-	public Controller[] rescanControllers() {
+	public AbstractController[] rescanControllers() {
 		return enumerateControllers();
 	}
 
@@ -167,7 +167,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		return new OSXKeyboard(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
+		return new OSXKeyboard(device, queue, components_array, new AbstractController[]{}, new Rumbler[]{});
 	}
 
 	private final static Mouse createMouseFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements) throws IOException {
@@ -181,7 +181,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		Mouse mouse = new OSXMouse(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
+		Mouse mouse = new OSXMouse(device, queue, components_array, new AbstractController[]{}, new Rumbler[]{});
 		if (mouse.getPrimaryButton() != null && mouse.getX() != null && mouse.getY() != null) {
 			return mouse;
 		} else {
@@ -201,17 +201,17 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		return new OSXAbstractController(device, queue, components_array, new Controller[]{}, new Rumbler[]{}, type);
+		return new OSXAbstractController(device, queue, components_array, new AbstractController[]{}, new Rumbler[]{}, type);
 	}
 
-	private final static void createControllersFromDevice(OSXHIDDevice device, List<Controller> controllers) throws IOException {
+	private final static void createControllersFromDevice(OSXHIDDevice device, List<AbstractController> controllers) throws IOException {
 		UsagePair usage_pair = device.getUsagePair();
 		if (usage_pair == null)
 			return;
 		List<OSXHIDElement> elements = device.getElements();
 		if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && (usage_pair.getUsage() == GenericDesktopUsage.MOUSE ||
 					usage_pair.getUsage() == GenericDesktopUsage.POINTER)) {
-			Controller mouse = createMouseFromDevice(device, elements);
+			AbstractController mouse = createMouseFromDevice(device, elements);
 			if (mouse != null)
 				controllers.add(mouse);
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && (usage_pair.getUsage() == GenericDesktopUsage.KEYBOARD ||
@@ -226,8 +226,8 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 	}
 
-	private final static Controller[] enumerateControllers() {
-		List<Controller> controllers = new ArrayList<>();
+	private final static AbstractController[] enumerateControllers() {
+		List<AbstractController> controllers = new ArrayList<>();
 		try {
 			OSXHIDDeviceIterator it = new OSXHIDDeviceIterator();
 			try {
@@ -256,9 +256,9 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			}
 		} catch (IOException e) {
 			log("Failed to enumerate devices: " + e.getMessage());
-			return new Controller[]{};
+			return new AbstractController[]{};
 		}
-		Controller[] controllers_array = new Controller[controllers.size()];
+		AbstractController[] controllers_array = new AbstractController[controllers.size()];
 		controllers.toArray(controllers_array);
 		return controllers_array;
 	}

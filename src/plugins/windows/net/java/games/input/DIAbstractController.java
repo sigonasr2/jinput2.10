@@ -48,7 +48,7 @@ final class DIAbstractController extends AbstractController {
 	private final IDirectInputDevice device;
 	private final Controller.Type type;
 	
-	protected DIAbstractController(IDirectInputDevice device, Component[] components, Controller[] children, Rumbler[] rumblers, Controller.Type type) {
+	protected DIAbstractController(IDirectInputDevice device, Component[] components, AbstractController[] children, Rumbler[] rumblers, Controller.Type type) {
 		super(device.getProductName(), components, children, rumblers);
 		this.device = device;
 		this.type = type;

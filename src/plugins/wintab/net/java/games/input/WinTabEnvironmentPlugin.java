@@ -116,11 +116,11 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 		return supported;
 	}
 
-	public Controller[] getControllers() {
+	public AbstractController[] getControllers() {
 		return controllers;
 	}
 
-	public Controller[] rescanControllers() {
+	public AbstractController[] rescanControllers() {
 		winTabContext.close();
 		winTabContext = new WinTabContext(window);
 		winTabContext.open();

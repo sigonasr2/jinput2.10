@@ -69,7 +69,7 @@ class RawMouseInfo extends RawDeviceInfo {
 		return device.getHandle();
 	}
 
-	public final Controller createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException {
+	public final AbstractController createControllerFromDevice(RawDevice device, SetupAPIDevice setupapi_device) throws IOException {
 		if (num_buttons == 0)
 			return null;
 		// A raw mouse contains the x and y and z axis and the buttons
@@ -82,7 +82,7 @@ class RawMouseInfo extends RawDeviceInfo {
 			Component.Identifier.Button id = DIIdentifierMap.mapMouseButtonIdentifier(DIIdentifierMap.getButtonIdentifier(i));
 			components[index++] = new RawMouse.Button(device, id, i);
 		}
-		Controller mouse = new RawMouse(setupapi_device.getName(), device, components, new Controller[]{}, new Rumbler[]{});
+		AbstractController mouse = new RawMouse(setupapi_device.getName(), device, components, new AbstractController[]{}, new Rumbler[]{});
 		return mouse;
 	}
 }

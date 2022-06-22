@@ -48,7 +48,7 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 	private int processed_events_index;
     
     protected AWTKeyboard() {
-        super("AWTKeyboard", createComponents(), new Controller[]{}, new Rumbler[]{});
+        super("AWTKeyboard", createComponents(), new AbstractController[]{}, new Rumbler[]{});
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 		resizeEventQueue(EVENT_QUEUE_DEPTH);
 	}

@@ -44,7 +44,7 @@ package net.java.games.input;
  * trackballs, and fingersticks.
  */
 public abstract class Mouse extends AbstractController {
-   protected Mouse(String name, Component[] components, Controller[] children, Rumbler[] rumblers) {
+   protected Mouse(String name, Component[] components, AbstractController[] children, Rumbler[] rumblers) {
       super(name, components, children, rumblers);
    }
 

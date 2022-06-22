@@ -36,7 +36,7 @@ import net.java.games.input.ControllerEnvironment;
 
 /**
  *
- * @since 2.10
+ * @since 2.11
  */
 public class TestSample {
    public static void main(String[] args) {

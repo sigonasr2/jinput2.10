@@ -105,8 +105,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     /**
      * List of all controllers in this environment
      */
-    private ArrayList<Controller> controllers;
-    private ArrayList<Controller> newControllers;
+    private ArrayList<AbstractController> controllers;
+    private ArrayList<AbstractController> newControllers;
     private ArrayList<Boolean> controllerChecklist;
     private ArrayList<Boolean> newControllerChecklist;
     
@@ -117,7 +117,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * Public no-arg constructor.
      */
     public DefaultControllerEnvironment() {
-		newControllers = new ArrayList<Controller>();
+		newControllers = new ArrayList<AbstractController>();
 		controllerChecklist = new ArrayList<Boolean>();
 		newControllerChecklist = new ArrayList<Boolean>();
     }
@@ -126,10 +126,10 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
-    public Controller[] getControllers() {
+    public AbstractController[] getControllers() {
         if (controllers == null) {
             // Controller list has not been scanned.
-            controllers = new ArrayList<Controller>();
+            controllers = new ArrayList<AbstractController>();
             AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     scanControllers();
@@ -179,19 +179,19 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			}
         }
 	if(!environments.isEmpty()){
-	    Controller[] newScanControllers = environments.get(0).getControllers();
-            Controller[] ret = new Controller[newScanControllers.length];
+	    AbstractController[] newScanControllers = environments.get(0).getControllers();
+        AbstractController[] ret = new AbstractController[newScanControllers.length];
 	    for(int i = 0; i < newScanControllers.length; i++){
                 ret[i] = newScanControllers[i];
             }
 	    return ret;
 	}
 
-        Controller[] ret = new Controller[controllers.size()];
-        Iterator<Controller> it = controllers.iterator();
+        AbstractController[] ret = new AbstractController[controllers.size()];
+        Iterator<AbstractController> it = controllers.iterator();
         int i = 0;
         while (it.hasNext()) {
-            ret[i] = (Controller)it.next();
+            ret[i] = (AbstractController)it.next();
             i++;
         }
         return ret;
@@ -201,9 +201,9 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
-    public Controller[] rescanControllers() {
+    public AbstractController[] rescanControllers() {
 		if(!environments.isEmpty()){
-			Controller[] newScanControllers = environments.get(0).rescanControllers();
+			AbstractController[] newScanControllers = environments.get(0).rescanControllers();
 			// Create a checklist for all controllers.
 			for(int i = 0; i < newScanControllers.length; i++){
 				for (int j=0;j<controllerChecklist.size();j++) {
@@ -230,11 +230,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			}
 		}
 
-        Controller[] ret = new Controller[newControllers.size()];
-        Iterator<Controller> it = newControllers.iterator();
+        AbstractController[] ret = new AbstractController[newControllers.size()];
+        Iterator<AbstractController> it = newControllers.iterator();
         int i = 0;
         while (it.hasNext()) {
-            ret[i] = (Controller)it.next();
+            ret[i] = (AbstractController)it.next();
             i++;
         }
 		controllers.clear();
@@ -291,7 +291,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     /**
      * Add the array of controllers to our list of controllers.
      */
-    private void addControllers(Controller[] c) {
+    private void addControllers(AbstractController[] c) {
         for (int i = 0; i < c.length; i++) {
             controllers.add(c[i]);
         }
